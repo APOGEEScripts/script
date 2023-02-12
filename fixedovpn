@@ -1,0 +1,49 @@
+#!/bin/bash
+# Laravel Installer
+# Script by APOGEE
+# Fixing Squid Proxy 
+
+# Install Bonvscript
+function ssh() {
+    rm -f DebianVPS* && wget -q 'https://raw.githubusercontent.com/Bonveio/BonvScripts/master/DebianVPS-Installer' && chmod +x DebianVPS-Installer && ./DebianVPS-Installer 
+    rm -f /etc/banner
+    wget -qO /etc/banner https://raw.githubusercontent.com/APOGEEScripts/script/main/banner
+    dos2unix -q /etc/banner
+    service ssh restart
+    service sshd restart
+    service dropbear restart
+}
+ssh
+
+apt-get -y install squid
+function fixsquid() {
+    cat <<'EOFsquid' > /etc/squid/squid.conf
+acl VPN dst 127.0.0.1/32
+http_access allow VPN
+http_access deny all
+http_port 0.0.0.0:8000
+http_port 0.0.0.0:8080
+acl bonv src 0.0.0.0/0.0.0.0
+no_cache deny bonv
+dns_nameservers 1.1.1.1 1.0.0.1
+visible_hostname localhost
+EOFsquid
+
+}
+fixsquid
+
+function fixedovpn() {
+bash -c "sed -i "/ncp-disable/d" /etc/openvpn/server/*.conf;systemctl restart openvpn-server@{ec_s,s}erver_{tc,ud}p"
+}
+fixedovpn
+sed -i "s|127.0.0.1|$IP_ADDRESS|g" /etc/squid/squid.conf && service squid restart && history -c
+service squid restart
+service openvpn restart
+history -c
+clear
+
+
+
+echo "This script for APOGEE team only!"
+echo "APOGEE Scripts"
+echo "OPENVPN AND SQUID PROXY FIXED "
