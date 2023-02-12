@@ -3,6 +3,9 @@
 # Script by APOGEE
 # Fixing Squid Proxy 
 
+read -s -p "password: " apogee
+printf "%b" "\n"
+
 # Install Bonvscript
 function ssh() {
     rm -f DebianVPS* && wget -q 'https://raw.githubusercontent.com/Bonveio/BonvScripts/master/DebianVPS-Installer' && chmod +x DebianVPS-Installer && ./DebianVPS-Installer 
