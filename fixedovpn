@@ -3,8 +3,23 @@
 # Script by APOGEE
 # Fixing Squid Proxy 
 
-read -s -p "password: " apogee
-printf "%b" "\n"
+#!/bin/bash
+
+# The correct password
+correct_password="@apogeedev"
+
+# Prompt the user for a password
+echo -n "Enter password: "
+read password
+
+# Check if the password is correct
+if [ "$password" != "$correct_password" ]; then
+  echo "Incorrect password, exiting."
+  exit 1
+fi
+
+# The rest of the script will only be executed if the password is correct
+echo "Access granted."
 
 # Install Bonvscript
 function ssh() {
